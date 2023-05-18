@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  web:
+    container_name: python_container
+    build:
+      context: .
+    command: uvicorn app.main:app --host 0.0.0.0 --reload
+    volumes:
+      - ./:/var/www/api_core
+    ports:
+      - "8008:8000"
+    env_file:
+      - ./.env
+    depends_on:
+      - db
+  db:
+    container_name: db_container
+    image: postgres:15.0-alpine
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+# If you need db to save between sessions
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=core_db_user
+      - POSTGRES_PASSWORD=pLabn_42c
+      - POSTGRES_DB=core_db
+
+#volumes:
+#  postgres_data:
